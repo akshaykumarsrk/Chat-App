@@ -1,10 +1,17 @@
 package com.substring.chat.chat_app_backend.configuration;
 
+
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSocketMessageBroker
@@ -30,12 +37,25 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
 
-        // client establish connection or subscribe on this end point /chat
+        // client establish connection or subscribe on this endpoint -> /chat
         // after that message will come to @MessageMapping sendMessage but it will prefix by /app
         // that is /app/sendMessage/roomId
         // and after this, that banda who subscribe the message on /topic/room/roomId
         registry.addEndpoint("/chat")  // connection establishment
-                .setAllowedOrigins("http://localhost:3000")
+                .setAllowedOrigins("http://localhost:5173")
                 .withSockJS(); // SockJS library for fallback if webSocket not work for any reason like due to old browser
     }
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/api/**")
+                        .allowedOrigins("http://localhost:5173")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE");
+            }
+        };
+    }
+
 }
