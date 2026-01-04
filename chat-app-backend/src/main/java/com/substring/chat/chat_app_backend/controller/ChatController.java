@@ -1,5 +1,6 @@
 package com.substring.chat.chat_app_backend.controller;
 
+import com.substring.chat.chat_app_backend.configuration.AppConstants;
 import com.substring.chat.chat_app_backend.model.Message;
 import com.substring.chat.chat_app_backend.playload.MessageRequest;
 import com.substring.chat.chat_app_backend.service.ChatService;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
-@CrossOrigin("http://localhost:5173")
+@CrossOrigin(AppConstants.FRONT_END_BASE_URL)
 public class ChatController
 {
 

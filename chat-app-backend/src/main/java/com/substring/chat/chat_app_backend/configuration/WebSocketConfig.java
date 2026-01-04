@@ -10,9 +10,6 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
-import java.util.Arrays;
-import java.util.List;
-
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer
@@ -42,7 +39,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer
         // that is /app/sendMessage/roomId
         // and after this, that banda who subscribe the message on /topic/room/roomId
         registry.addEndpoint("/chat")  // connection establishment
-                .setAllowedOrigins("http://localhost:5173")
+                .setAllowedOrigins(AppConstants.FRONT_END_BASE_URL)
                 .withSockJS(); // SockJS library for fallback if webSocket not work for any reason like due to old browser
     }
 
@@ -52,7 +49,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                        .allowedOrigins("http://localhost:5173")
+                        .allowedOrigins(AppConstants.FRONT_END_BASE_URL)
                         .allowedMethods("GET", "POST", "PUT", "DELETE");
             }
         };

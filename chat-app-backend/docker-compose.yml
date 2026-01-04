@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  mongo:    # service 1 (for pulling mongodb image)
+    image: mongo:5.0
+    container_name: mongodb
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo-db:/data/db  # Persist (Saves) data even if container restarts.   /data/db - default data folder inside MongoDB container.
+    networks:
+      - app-network
+
+  boot-app:   # service 2 (for building our spring boot application image and then pull)
+    image: akshay121817/chatback:latest # pull image from my docker hub account(akshay121817) repository(chatback)
+    build:                              # build your image
+      context: .                        # . means from current path use dockerfile(see down) in order to build image
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/chatapp # mongo - service name(see service 1) mongodb:// → protocol
+    depends_on:
+      - mongo   # Start MongoDB before backend.
+    networks:
+      - app-network
+
+
+# volume to stores MongoDB data i.e (persist data) in host machine
+volumes:
+  mongo-db:   # Create a storage area managed by Docker.
+              # Safe
+              # Persistent
+              # Reusable
+
+# mongodb and spring boot application would be on same network for communication
+networks:
+  app-network:
+
+
+
+# in terminal
+# 1. docker compose build
+# 2. docker image
+# 3. docker login
+# 4. docker compose push
